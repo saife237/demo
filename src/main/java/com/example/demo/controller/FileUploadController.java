@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 @Controller
 public class FileUploadController {
 
-    private static final String UPLOAD_DIR = "uploads/";
+    private static final String UPLOAD_DIR = "main/resources";
 
 
     @GetMapping("/")
