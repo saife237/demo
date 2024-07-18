@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 @Controller
 public class FileUploadController {
 
-    private static final String UPLOAD_DIR = "main/resources";
+    // private static final String UPLOAD_DIR = "main/resources";
 
 
     @GetMapping("/")
@@ -37,7 +37,7 @@ public class FileUploadController {
 
         try {
             // Determine the path to the upload directory provided by the user
-            Path uploadPath = Paths.get(UPLOAD_DIR+path);
+            Path uploadPath = Paths.get(path);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
