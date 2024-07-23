@@ -1,35 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Upload PDF</title>
-    <script>
-        function uploadFiles() {
-            var form = document.getElementById('uploadForm');
-            var formData = new FormData(form);
-
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            }).then(response => response.text())
-              .then(data => {
-                  document.getElementById('result').innerText = data;
-              }).catch(error => {
-                  console.error('Error:', error);
-              });
-
-            return false; // Prevent the default form submission
-        }
-    </script>
+    <title>PDF Upload</title>
 </head>
 <body>
-    <h1>Upload PDF Files</h1>
-    <form id="uploadForm" onsubmit="return uploadFiles()">
-        <input type="file" name="files" accept=".pdf" multiple required/><br><br>
+    <h2>Upload PDF Files</h2>
+    <form method="post" enctype="multipart/form-data" th:action="@{/upload}">
         <label for="path">Destination Path:</label>
-        <input type="text" name="path" id="path" required/><br><br>
-        <input type="submit" value="Upload"/>
+        <input type="text" name="path" required/><br/><br/>
+        <label for="files">Choose PDF files:</label>
+        <input type="file" name="files" accept="application/pdf" multiple required/><br/><br/>
+        <input type="submit" value="Upload and Extract Text"/>
     </form>
-    <h2>Result:</h2>
-    <pre id="result"></pre>
+    <p th:if="${message}" th:text="${message}"></p>
+    <pre th:if="${text}" th:text="${text}"></pre>
 </body>
 </html>
