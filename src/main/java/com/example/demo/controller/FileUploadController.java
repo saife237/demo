@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +16,8 @@ import java.nio.file.Paths;
 
 @Controller
 public class FileUploadController {
+
+    private final Tika tika = new Tika();
 
     @GetMapping("/")
     public String index() {
@@ -45,18 +47,16 @@ public class FileUploadController {
                 Path filePath = uploadPath.resolve(file.getOriginalFilename());
                 Files.write(filePath, file.getBytes());
 
-                PDDocument document = PDDocument.load(filePath.toFile());
-                PDFTextStripper pdfStripper = new PDFTextStripper();
-                String text = pdfStripper.getText(document);
-                document.close();
-
+                // Extract text using Apache Tika
+                String text = tika.parseToString(filePath.toFile());
+                
                 extractedText.append("File: ").append(file.getOriginalFilename()).append("\n")
                         .append(text).append("\n\n");
             }
 
             model.addAttribute("message", "Files uploaded successfully!");
             model.addAttribute("text", extractedText.toString());
-        } catch (IOException e) {
+        } catch (IOException | TikaException e) {
             e.printStackTrace();
             model.addAttribute("message", "An error occurred while uploading the files: " + e.getMessage());
         }
